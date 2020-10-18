@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Open Aiven</title>
+  <meta charset="utf-8" />
+  <script src="wasm_exec.js"></script>
+<style>
+body {
+  background-color: #FF3554;
+}
+h1 {
+  color: yellow;
+}
+li {
+  color: white;
+}
+#grid-container {
+  display: grid;
+}
+</style>
+</head>
+
+<body>
+  <script>
+    function fetchAndInstantiate(url, importObject) {
+  return fetch(url).then(response =>
+    response.arrayBuffer()
+  ).then(bytes =>
+    WebAssembly.instantiate(bytes, importObject)
+  ).then(results =>
+      results.instance
+  );
+}
+var go = new Go();
+var mod = fetchAndInstantiate("/main.wasm", go.importObject);
+window.onload = function() {
+  mod.then(function(instance) {
+    go.run(instance);
+  });
+};
+  /*  const go = new Go();
+
+     if (!WebAssembly.instantiateStreaming) {
+        // polyfill
+        WebAssembly.instantiateStreaming = async (resp, importObject) => {
+          const source = await (await resp).arrayBuffer();
+          return await WebAssembly.instantiate(source, importObject);
+        };
+      }
+
+
+      let mod, inst;
+
+      WebAssembly.instantiateStreaming(fetch("./main.wasm"), go.importObject).then(
+        result => {
+          mod = result.module;
+          inst = result.instance;
+          go.run(inst);
+          getContributions()
+          console.log(contribs);
+//          document.getElementById("runButton").disabled = false;
+        }
+      );
+
+      async function run() {
+        await go.run(inst);
+//        getContributions();
+ //       console.log(contribs)
+        inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
+      }
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+      cont = getContributions();
+      console.log(contribs);
+    });*/
+  </script>
+<blink><h1>Aiven</h1></blink>
+<!--<button onClick="run();" id="runButton" disabled>Run</button>-->
+<p id="output"></p>
+<div>
+  <h1>Aiven's Open Source Projects</h1>
+  <ul id="aiven-repos"></ul>
+</div>
+<div id="grid-container">
+</div>
+
+</ul>
+</body>
+
+</html>
